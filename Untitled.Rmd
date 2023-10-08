@@ -1,0 +1,11 @@
+---
+title: "Project 2"
+authors: "Xhulia Turkaj, Folu...., Ron Balaban, Group_Member_4"
+date: "2023-10-08"
+output: html_document
+---
+
+
+## PROJECT 2 DATA 607 MSDS 
+
+#### Preparing different datasets for downstreamanalysis work.
