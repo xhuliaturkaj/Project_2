@@ -785,3 +785,100 @@ correlation_df
 
 #-------------------------------------------------------------------------------------------------------
 
+
+
+
+##### XHULIA TURKAJ 
+
+I have decided to work with the New York Prison Employee Discipline Data from The Marshall Project
+Found here: (https://observablehq.com/@themarshallproject/new-york-prison-employee-discipline-data)
+
+The data is originally retrieved from the NY State Department of Corrections and Community Supervision
+
+```{r}
+
+employee_discipline_url <- "https://raw.githubusercontent.com/xhuliaturkaj/Project_2/main/NYPrisonEmployeeDiscipline.csv"
+employee_discipline <- read.csv(employee_discipline_url, header = TRUE)
+head(employee_discipline)
+```
+
+### Let's start by counting all the unique combinations of first and last name
+
+
+
+```{r}
+unique_names <- employee_discipline %>%
+  group_by(LNAME, FNAME) %>%
+  summarize(count = n())
+```
+
+
+```{r}
+n_unique_combinations <- nrow(unique_names)
+print(n_unique_combinations)
+```
+There is a total of 953 unique combinations which means there are 953 employees included in this data set. 
+Let's format the data frame in a tidy format. 
+
+```{r}
+#First I will create a new column that represents first and last names and will get rid 
+# of the separate first and last name columns. 
+
+employee_discipline <- employee_discipline %>%
+  mutate(FULL_NAME = paste(LNAME, FNAME)) %>%
+  select(FULL_NAME, everything(), -LNAME, -FNAME)
+
+
+#Let's run distinct one more time on the composed FULL_NAME variable 
+
+
+length(unique(employee_discipline$FULL_NAME))
+
+#We again confirmed that there are 953 unique observations/employees in this data frame
+
+```
+#### Let's perform some data cleaning 
+
+```{r}
+
+
+#First remove the columns that we are not interested in
+
+
+employee_discipline <-  employee_discipline %>%
+  select(-c(UNION, CLOSED, REASON, Field0, DISPODT, DISPO, PENALTYDIS, ARBITRATOR, PERCLOSED, page_num  ))
+
+#Convert the other columns to factor
+
+employee_discipline <- employee_discipline %>%
+  mutate_at(vars(FACILITY, TITLE, MISCONDUCT, PENALTY), as.factor)
+
+
+#Next let's create a unique identifier for each Employee
+
+employee_discipline <- employee_discipline %>%
+  group_by(FULL_NAME) %>%
+  mutate(employee_id = cur_group_id()) %>%
+  ungroup()
+
+#Make sure there are 953 employee ids 
+
+length(unique(employee_discipline$employee_id))
+
+head(employee_discipline)
+
+
+
+
+
+head(employee_discipline_wide)
+```
+
+
+#### Next let's convert this data frame into a wide tidy format 
+
+```{r}
+
+```
+
+
